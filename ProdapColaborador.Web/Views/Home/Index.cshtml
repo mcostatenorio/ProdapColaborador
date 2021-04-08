@@ -1,8 +1,46 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Tarefas";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style type="text/css">
+    .button {
+        margin-top: 10px;
+        width: 100%;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                Nova Tarefa
+            </div>
+            <div class="card-body">
+                <form>
+                    <textarea id="descricaoTarefa" maxlength="500" name="descricaoTarefa" rows="4" cols="30" required></textarea>
+                    <button type="submit" class="btn btn-primary button">Adicionar Tarefa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                À fazer
+            </div>
+            <div class="card-body">
+                This is some text within a card body.
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                Concluídas
+            </div>
+            <div class="card-body">
+                This is some text within a card body.
+            </div>
+        </div>
+    </div>
 </div>
