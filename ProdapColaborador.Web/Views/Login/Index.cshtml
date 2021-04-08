@@ -1,0 +1,66 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" />
+
+<style type="text/css">
+    .label {
+        margin-top: 10px;
+    }
+
+    .alert-top {
+        margin-top: 10px;
+    }
+</style>
+
+<html class="loading" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login</title>
+</head>
+<body>
+    <div class="row align-items-center h-100 mx-auto">
+        <div class="col-sm-9 col-md-7 col-lg-3 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Entrar</h3>
+                    @using (Html.BeginForm("Logar", "Login", FormMethod.Post, new { @class = "form-signin" }))
+                    {
+                        <div class="form-label-group">
+                            <label class="label" for="login">Informe o usuário:</label>
+                            <input id="login" name="login" class="form-control" placeholder="Usuário" required autofocus>
+                        </div>
+                        <div class="form-label-group">
+                            <label class="label" for="senha">Informe a senha:</label>
+                            <input type="password" name="senha" id="senha" class="form-control" placeholder="Senha" required>
+                        </div>
+                        <hr class="my-4">
+                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Entrar</button>
+                    }
+                    <button onclick="location.href='@Url.Action("Index", "Cadastro")'" class="btn btn-lg btn-secondary btn-block text-uppercase">Criar novo usuário</button>
+                    <div id="alertBox" style="display:none" class="alert alert-danger alert-top text-center" role="alert">
+                        Usuário ou senha incorretos!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        $("document").ready(function () {
+            debugger;
+            var valor = '@TempData["alert"]';
+            if (valor) {
+                document.getElementById("alertBox").style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>
