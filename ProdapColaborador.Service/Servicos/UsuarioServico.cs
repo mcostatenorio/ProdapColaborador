@@ -13,13 +13,13 @@ namespace ProdapColaborador.Service.Servicos
             _usuarioRepositorio = usuarioRepositorio;
         }
 
-        public bool Cadastrar(string login, string senha)
+        public Usuario Cadastrar(string login, string senha)
         {
             var usuario = _usuarioRepositorio.ObterPorLogin(login);
 
             if (usuario != null)
             {
-                return false;
+                return null;
             }
 
             Usuario user = new Usuario();
@@ -27,24 +27,24 @@ namespace ProdapColaborador.Service.Servicos
             user.Senha = senha;
             _usuarioRepositorio.Adicionar(user);
 
-            return true;
+            return usuario;
         }
 
-        public bool Logar(string login, string senha)
+        public Usuario Logar(string login, string senha)
         {
             var usuario = _usuarioRepositorio.ObterPorLogin(login);
 
             if(usuario == null)
             {
-                return false;
+                return null;
             }
 
             if(usuario.Senha == senha)
             {
-                return true;
+                return usuario;
             }
 
-            return false;
+            return null;
         }
     }
 }

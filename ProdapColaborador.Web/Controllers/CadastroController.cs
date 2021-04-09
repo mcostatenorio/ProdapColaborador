@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ProdapColaborador.Business.Interfaces.Servicos;
-using ProdapColaborador.Service.Servicos;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProdapColaborador.Web.Controllers
 {
@@ -29,8 +26,10 @@ namespace ProdapColaborador.Web.Controllers
         {
             try
             {
-                if (_usuarioServico.Cadastrar(form["login"], form["senha"]))
+                var usuario = _usuarioServico.Cadastrar(form["login"], form["senha"]);
+                if (usuario != null)
                 {
+                    HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(usuario));
                     return RedirectToAction("Index", "Home");
                 }
                 else

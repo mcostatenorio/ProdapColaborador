@@ -7,18 +7,43 @@
         margin-top: 10px;
         width: 100%;
     }
+
+    .button-top {
+        margin-top: 10px;
+        width: 49.2%;
+    }
+
+    .special-card {
+        background-color: rgba(245, 245, 245, 1);
+        opacity: .4;
+    }
 </style>
 
 <div class="row">
-    <div class="col-lg-4">
+    <div id="divCreateTarefa" class="col-lg-4" style="display: block">
         <div class="card">
             <div class="card-header">
                 Nova Tarefa
             </div>
-            <div class="card-body">
-                <form>
-                    <textarea id="descricaoTarefa" maxlength="500" name="descricaoTarefa" rows="4" cols="30" required></textarea>
+            <div class="card-body mt-3">
+                @using (Html.BeginForm("CadastrarTarefa", "Home", FormMethod.Post))
+                {
+                    <textarea id="descricaoTarefa" maxlength="500" name="descricaoTarefa" rows="7" style="width:100%" required></textarea>
                     <button type="submit" class="btn btn-primary button">Adicionar Tarefa</button>
+                }
+            </div>
+        </div>
+    </div>
+    <div id="divEditTarefa" class="col-lg-4" style="display: none">
+        <div class="card">
+            <div class="card-header">
+                Editar Tarefa
+            </div>
+            <div class="card-body mt-3">
+                <form>
+                    <textarea id="descricaoTarefaEdit" maxlength="500" name="descricaoTarefa" rows="7" style="width:100%" required></textarea>
+                    <a style="cursor:pointer; color: white;" onclick="cancelarEdit()" class="btn btn-danger button-top">Cancelar</a>
+                    <button type="submit" onclick="atualizarTarefa()" class="btn btn-success button-top">Salvar</button>
                 </form>
             </div>
         </div>
@@ -28,19 +53,202 @@
             <div class="card-header">
                 À fazer
             </div>
-            <div class="card-body">
-                This is some text within a card body.
+            <div id="bodyTarefasAbertas" class="card-body">
             </div>
         </div>
     </div>
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                Concluídas
+                Feitas
             </div>
-            <div class="card-body">
-                This is some text within a card body.
+            <div id="bodyTarefasConcluidas" class="card-body">
             </div>
         </div>
     </div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    var idTarefaEditNow;
+
+    $("document").ready(function () {
+        obterCardsTarefasEmAbertosUsuario();
+        obterCardsTarefasConcluidasUsuario();
+    });
+
+    //#region Obter tarefas e preencher cards
+    function obterCardsTarefasEmAbertosUsuario() {
+        $.ajax({
+            url: "./Home/GetTarefasAbertas",
+            type: "get",
+            success: function (result) {
+                var tarefas = result._listaTarefasAbertas;
+                var divBody = $("#bodyTarefasAbertas");
+                divBody.empty();
+
+                tarefas.forEach(function (tarefa) {
+                    divBody.append(
+                        '<div id="cardTarefa' + tarefa.id + '" class="card mt-3">' +
+                        '   <div class="card-header bg-gray-100 pr-3 d-flex align-items-center flex-wrap">' +
+                        '       <div class="card-title">' + formatarData(tarefa.dataCriacao) + '</div>' +
+                        '   </div>' +
+                        '    <div class="card-body">' +
+                        '        ' + tarefa.descricao + '' +
+                        '    </div>' +
+                        '    <div class="card-footer text-center">' +
+                        '        <button id="btnEditarTarefa' + tarefa.id + '" onclick="editar(' + tarefa.id + ')" class="btn btn-primary">Editar</button>' +
+                        '        <button id="btnConcluirTarefa' + tarefa.id + '" onclick="concluir(' + tarefa.id + ')" class="btn btn-success">Concluir</button>' +
+                        '        <button id="btnRemoverTarefa' + tarefa.id + '" onclick="remover(' + tarefa.id + ')" class="btn btn-danger">Remover</button>' +
+                        '    </div>' +
+                        '</div>'
+                    );
+                });
+            }
+        });
+    }
+
+    function obterCardsTarefasConcluidasUsuario() {
+        $.ajax({
+            url: "./Home/GetTarefasConcluidas",
+            type: "get",
+            success: function (result) {
+                var tarefas = result._listaTarefasConcluidas;
+                var divBody = $("#bodyTarefasConcluidas");
+                divBody.empty();
+
+                tarefas.forEach(function (tarefa) {
+                    divBody.append(
+                        '<div class="card mt-3">' +
+                        '    <div class="card-header bg-gray-100 pr-3 d-flex align-items-center flex-wrap">' +
+                        '       <div class="card-title">' + formatarData(tarefa.dataCriacao) + '</div>' +
+                        '    </div>' +
+                        '    <div class="card-body">' +
+                        '        ' + tarefa.descricao + '' +
+                        '    </div>' +
+                        '    <div class="card-footer text-right">' +
+                        '        <button onclick="remover(' + tarefa.id + ')" class="btn btn-danger">Remover</button>' +
+                        '    </div>' +
+                        '</div>'
+                    );
+                });
+            }
+        });
+    }
+    //#endregion
+
+    //#region Ações dos botões de cada tarefa
+    function editar(idTarefa) {
+        $.ajax({
+            url: "./Home/GetTarefa",
+            type: "get",
+            data: {
+                id: idTarefa
+            },
+            success: function (result) {
+                if (idTarefaEditNow != undefined) {
+                    document.getElementById('cardTarefa' + idTarefaEditNow).className = "card mt-3";
+                    document.getElementById('btnEditarTarefa' + idTarefaEditNow).disabled = false;
+                    document.getElementById('btnConcluirTarefa' + idTarefaEditNow).disabled = false;
+                    document.getElementById('btnRemoverTarefa' + idTarefaEditNow).disabled = false;
+                }
+                idTarefaEditNow = idTarefa;
+                var tarefa = result._tarefa;
+
+                document.getElementById('cardTarefa' + tarefa.id).className = "card mt-3 special-card";
+                document.getElementById('btnEditarTarefa' + tarefa.id).disabled = true;
+                document.getElementById('btnConcluirTarefa' + tarefa.id).disabled = true;
+                document.getElementById('btnRemoverTarefa' + tarefa.id).disabled = true;
+
+                document.getElementById("divCreateTarefa").style.display = "none";
+                $('#descricaoTarefaEdit').val(tarefa.descricao);
+                document.getElementById("divEditTarefa").style.display = "block";
+            }
+        });
+    };
+
+    function concluir(idTarefa) {
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "./Home/ConcluirTarefa/",
+            data: {
+                id: idTarefa
+            },
+            success: function (data) {
+                debugger;
+                var _data = data.data;
+                if (_data == 1) {
+                    atualizaTodosCards();
+                }
+            },
+        });
+    };
+
+    function remover(idTarefa) {
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: "./Home/RemoverTarefa/",
+            data: {
+                id: idTarefa
+            },
+            success: function (data) {
+                var _data = data.data;
+                if (_data == 1) {
+                    atualizaTodosCards();
+                }
+            },
+        });
+    };
+    //#endregion
+
+    function cancelarEdit() {
+        document.getElementById('cardTarefa' + idTarefaEditNow).className = "card mt-3";
+        document.getElementById('btnEditarTarefa' + idTarefaEditNow).disabled = false;
+        document.getElementById('btnConcluirTarefa' + idTarefaEditNow).disabled = false;
+        document.getElementById('btnRemoverTarefa' + idTarefaEditNow).disabled = false;
+
+        document.getElementById("divEditTarefa").style.display = "none";
+        document.getElementById("divCreateTarefa").style.display = "block";
+    };
+
+    function atualizarTarefa() {
+        if ($("#descricaoTarefaEdit").val() != '') {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: "./Home/AtualizarTarefa/",
+                data: {
+                    id: idTarefaEditNow,
+                    descricao: $("#descricaoTarefaEdit").val()
+                },
+                success: function (data) {
+                    var _data = data.data;
+                    if (_data == 1) {
+                        document.getElementById('cardTarefa' + idTarefaEditNow).className = "card mt-3";
+                        document.getElementById('btnEditarTarefa' + idTarefaEditNow).disabled = false;
+                        document.getElementById('btnConcluirTarefa' + idTarefaEditNow).disabled = false;
+                        document.getElementById('btnRemoverTarefa' + idTarefaEditNow).disabled = false;
+                        document.getElementById("divEditTarefa").style.display = "none";
+                        document.getElementById("divCreateTarefa").style.display = "block";
+                        atualizaTodosCards();
+                    }
+                },
+            });
+        }
+    };
+
+    function atualizaTodosCards() {
+        obterCardsTarefasEmAbertosUsuario();
+        obterCardsTarefasConcluidasUsuario();
+    };
+
+    function formatarData(data) {
+        const date = new Date(data)
+        dataFormatada = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();;
+        return dataFormatada;
+
+    }
+</script>

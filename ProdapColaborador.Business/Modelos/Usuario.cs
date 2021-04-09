@@ -15,5 +15,10 @@ namespace ProdapColaborador.Business.Modelos
         /// Senha do usuário
         /// </summary>
         public string Senha { get; set; }
+
+        /// <summary>
+        /// Coleção de tarefas
+        /// </summary>
+        public virtual ICollection<Tarefa> Tarefa { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,7 @@ using ProdapColaborador.Business.Interfaces.Servicos;
 using ProdapColaborador.Data.Context;
 using ProdapColaborador.Data.Repositorio;
 using ProdapColaborador.Service.Servicos;
+using System;
 
 namespace ProdapColaborador.Web
 {
@@ -35,8 +37,21 @@ namespace ProdapColaborador.Web
                 services.AddControllersWithViews();
             }
 
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(600);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped<IUsuarioServico, UsuarioServico>();
+            services.AddScoped<ITarefaServico, TarefaServico>();
+
             services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+            services.AddScoped<ITarefaRepositorio, TarefaRepositorio>();
 
             services.AddDbContext<ProdapColaboradorDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectionSql")));
             services.AddControllersWithViews();
@@ -56,6 +71,7 @@ namespace ProdapColaborador.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 
