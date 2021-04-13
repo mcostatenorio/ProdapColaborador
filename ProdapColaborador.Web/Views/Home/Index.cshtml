@@ -177,7 +177,6 @@
                 id: idTarefa
             },
             success: function (data) {
-                debugger;
                 var _data = data.data;
                 if (_data == 1) {
                     atualizaTodosCards();
@@ -227,12 +226,6 @@
                 success: function (data) {
                     var _data = data.data;
                     if (_data == 1) {
-                        document.getElementById('cardTarefa' + idTarefaEditNow).className = "card mt-3";
-                        document.getElementById('btnEditarTarefa' + idTarefaEditNow).disabled = false;
-                        document.getElementById('btnConcluirTarefa' + idTarefaEditNow).disabled = false;
-                        document.getElementById('btnRemoverTarefa' + idTarefaEditNow).disabled = false;
-                        document.getElementById("divEditTarefa").style.display = "none";
-                        document.getElementById("divCreateTarefa").style.display = "block";
                         atualizaTodosCards();
                     }
                 },

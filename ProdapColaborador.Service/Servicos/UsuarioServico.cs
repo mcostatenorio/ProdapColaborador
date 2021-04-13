@@ -27,7 +27,7 @@ namespace ProdapColaborador.Service.Servicos
             user.Senha = senha;
             _usuarioRepositorio.Adicionar(user);
 
-            return usuario;
+            return user;
         }
 
         public Usuario Logar(string login, string senha)
