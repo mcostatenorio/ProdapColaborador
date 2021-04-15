@@ -11,13 +11,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{4CB5BF3A-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProdapColaborador.Web", "ProdapColaborador.Web\ProdapColaborador.Web.csproj", "{38F83926-07A3-4C1C-926B-ED3DC1CA6C77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProdapColaborador.Business", "ProdapColaborador.Business\ProdapColaborador.Business.csproj", "{EFF206F2-B80F-4887-BD08-3B0F319AC2AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProdapColaborador.Business", "ProdapColaborador.Business\ProdapColaborador.Business.csproj", "{EFF206F2-B80F-4887-BD08-3B0F319AC2AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProdapColaborador.Data", "ProdapColaborador.Data\ProdapColaborador.Data.csproj", "{2D469182-FE2C-462A-AD1E-481EEC66D283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProdapColaborador.Data", "ProdapColaborador.Data\ProdapColaborador.Data.csproj", "{2D469182-FE2C-462A-AD1E-481EEC66D283}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{79CFB001-849F-4A98-906B-0091739553BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProdapColaborador.Service", "ProdapColaborador.Service\ProdapColaborador.Service.csproj", "{033B5646-83ED-4460-B0D2-8FB940C93186}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProdapColaborador.Service", "ProdapColaborador.Service\ProdapColaborador.Service.csproj", "{033B5646-83ED-4460-B0D2-8FB940C93186}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScriptsDB", "ScriptsDB", "{20F636F8-DA34-47E3-A722-6C2EABC95540}"
+	ProjectSection(SolutionItems) = preProject
+		CreateTableTarefa.sql = CreateTableTarefa.sql
+		CreateTableUsuario.sql = CreateTableUsuario.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

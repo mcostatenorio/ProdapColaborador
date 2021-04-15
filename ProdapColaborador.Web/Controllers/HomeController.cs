@@ -42,6 +42,18 @@ namespace ProdapColaborador.Web.Controllers
             return View();
         }
 
+        private bool ValidarSessao()
+        {
+            if (HttpContext.Session.GetString("SessionUser") == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -53,6 +65,10 @@ namespace ProdapColaborador.Web.Controllers
         {
             try
             {
+                if (!ValidarSessao())
+                {
+                    return RedirectToAction("Index", "Login");
+                }
                 Tarefa tarefa = new Tarefa();
                 tarefa.Descricao = form["descricaoTarefa"];
                 tarefa.IdUsuarioResponsavel = _usuario.Id;
@@ -74,6 +90,11 @@ namespace ProdapColaborador.Web.Controllers
         [HttpPost]
         public JsonResult RemoverTarefa(int id)
         {
+            if (!ValidarSessao())
+            {
+                // Codigo 2 erro de sessao
+                return Json(new { data = 2 });
+            }
             _tarefaServico.Remover(id);
             return Json(new { data = 1 });
         }
@@ -81,6 +102,11 @@ namespace ProdapColaborador.Web.Controllers
         [HttpPost]
         public JsonResult AtualizarTarefa(int id, string descricao)
         {
+            if (!ValidarSessao())
+            {
+                // Codigo 2 erro de sessao
+                return Json(new { data = 2 });
+            }
             Tarefa tarefa = _tarefaServico.ObterPorId(id);
             tarefa.Descricao = descricao;
             _tarefaServico.Atualizar(tarefa);
@@ -90,6 +116,11 @@ namespace ProdapColaborador.Web.Controllers
         [HttpPost]
         public JsonResult ConcluirTarefa(int id)
         {
+            if (!ValidarSessao())
+            {
+                // Codigo 2 erro de sessao
+                return Json(new { data = 2 });
+            }
             _tarefaServico.ConcluirTarefa(id);
             return Json(new { data = 1 });
         }

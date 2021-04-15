@@ -181,6 +181,9 @@
                 if (_data == 1) {
                     atualizaTodosCards();
                 }
+                else if (_data == 2) {
+                    window.location.href = '/Login/Index';
+                }
             },
         });
     };
@@ -197,6 +200,9 @@
                 var _data = data.data;
                 if (_data == 1) {
                     atualizaTodosCards();
+                }
+                else if (_data == 2) {
+                    window.location.href = '/Login/Index';
                 }
             },
         });
@@ -228,6 +234,9 @@
                     if (_data == 1) {
                         atualizaTodosCards();
                     }
+                    else if (_data == 2) {
+                        window.location.href = '/Login/Index';
+                    }
                 },
             });
         }
@@ -242,6 +251,5 @@
         const date = new Date(data)
         dataFormatada = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();;
         return dataFormatada;
-
     }
 </script>
